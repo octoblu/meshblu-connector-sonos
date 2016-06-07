@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-sonos",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Meshblu Connector ",
   "homepage": "https://github.com/octoblu/sonos",
   "bugs": "https://github.com/octoblu/sonos/issues",
@@ -28,13 +28,13 @@
   "dependencies": {
     "coffee-script": "^1.10.0",
     "debug": "^2.2.0",
-    "eventemitter2": "^1.0.0",
     "meshblu-config": "^4.0.0",
-    "meshblu-connector-runner": "^6.0.0"
+    "meshblu-connector-runner": "^6.0.0",
+    "sonos": "^0.12.0"
   },
   "meshbluConnector": {
     "githubSlug": "octoblu/meshblu-connector-sonos",
-    "schemasUrl": "https://raw.githubusercontent.com/octoblu/meshblu-connector-sonos/v1.0.0/schemas.json"
+    "schemasUrl": "https://raw.githubusercontent.com/octoblu/meshblu-connector-sonos/v1.0.1/schemas.json"
   },
   "platformDependencies": {
     "darwin": [],
