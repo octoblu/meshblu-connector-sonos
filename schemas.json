@@ -40,13 +40,15 @@
           "url": {
             "type": "string"
           }
-        }
+        },
+        "required": ["metadata"]
       },
       "current-track": {
         "title": "Get Current Track",
         "type": "object",
         "properties": {}
-      }
+      },
+      "required": ["metadata"]
     }
   }
 }
