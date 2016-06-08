@@ -15,7 +15,7 @@ class SonosConnector extends EventEmitter
     callback()
 
   onMessage: (message) =>
-    return unless message?
+    return unless message.payload?
     { payload } = message
     switch payload.action
       when 'play-url' then @playUrl payload.url
