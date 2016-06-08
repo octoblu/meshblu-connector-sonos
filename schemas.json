@@ -37,17 +37,30 @@
         "title": "Play From URL",
         "type": "object",
         "properties": {
+          "action": {
+            "type": "string",
+            "default": "play-url",
+            "x-schema-form": {
+              "type": "hidden"
+            }
+          },
           "url": {
             "type": "string"
           }
-        },
-        "required": ["metadata"]
+        }
       },
       "current-track": {
         "title": "Get Current Track",
         "type": "object",
-        "properties": {},
-        "required": ["metadata"]
+        "properties": {
+          "action": {
+            "type": "string",
+            "default": "current-track",
+            "x-schema-form": {
+              "type": "hidden"
+            }
+          }
+        }
       }
     }
   }

@@ -16,8 +16,8 @@ class SonosConnector extends EventEmitter
 
   onMessage: (message) =>
     return unless message?
-    { payload, topic } = message
-    switch topic
+    { payload } = message
+    switch payload.action
       when 'play-url' then @playUrl payload.url
       when 'current-track' then @getCurrentTrack()
 
