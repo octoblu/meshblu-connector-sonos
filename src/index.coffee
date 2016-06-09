@@ -1,67 +1,62 @@
+_               = require 'lodash'
 {EventEmitter}  = require 'events'
-debug           = require('debug')('meshblu-connector-sonos:index')
 Sonos           = require 'sonos'
 cSonos          = require('sonos').Sonos
+debug           = require('debug')('meshblu-connector-sonos:index')
 
 class SonosConnector extends EventEmitter
-  constructor: ->
-    debug 'Sonos constructed'
-
   isOnline: (callback) =>
-    callback null, running: true
+    callback null, running: !!@sonos
 
-  close: (callback) =>
-    debug 'on close'
-    callback()
+  onMessage: (message={}) =>
+    @doAction message.payload
 
-  onMessage: (message) =>
-    return unless message.payload?
-    { payload } = message
-    switch payload.action
-      when 'play-url' then @playUrl payload.url
-      when 'current-track' then @getCurrentTrack()
+  doAction: (payload={}) =>
+    return @emitMessage 'error', error: 'Not connected to a Sonos' unless @sonos?
+    { action, args } = payload
+    return @emitMessage 'error', error: "Invalid Action, #{action}" unless @sonos[action]?
+    callback = (error, response) =>
+      return @emitMessage 'error', { error } if error?
+      @emitMessage action, { response }
 
-  getCurrentTrack: =>
-    @sonos.currentTrack (err, track) =>
-      return if err?
-      @emit 'message',
-        devices: [ '*' ]
-        payload:
-          currentTrack: track
+    argValues = _.values(args)
+    argValues.push callback
+    @sonos[action] argValues...
 
-  playUrl: (url) =>
-    @sonos.play url, (err, playing) =>
-      debug 'play response',
-        error: err
-        playing: playing
+  emitMessage: (topic, payload={}) =>
+    @emit 'message', {
+      devices: ['*'],
+      topic,
+      payload
+    }
 
-  connectSonos: () =>
-    if @options.useCustomIP?
-      return @sonos = new cSonos(@options.ip) if @options.useCustomIP and @options.ip?
+  connectToSonos: (@ipAddress=@ipAddress) =>
+    @sonos = new cSonos @ipAddress
+
+  getAvailableSonos: =>
+    return @connectToSonos() if @ipAddress
     @getDeviceIp (error, ipAddress) =>
-      @sonos = new cSonos(ipAddress)
+      return @emitMessage 'error', { error } if error?
+      @connectToSonos ipAddress
 
   getDeviceIp: (callback) =>
-    if @discoveredIp
-      debug 'ip address already discovered', @discoveredIp
-      return callback(null, @discoveredIp)
     debug 'discovering...'
     search = Sonos.search()
     search.on 'DeviceAvailable', (device, model) =>
       debug 'device discovered', device, model
-      @discoveredIp = device.host
-      debug 'ipAddress', @discoveredIp
-      callback null, @discoveredIp
+      search.destroy()
+      callback null, device.host
 
-  onConfig: (device) =>
-    @options = device.options || {}
-    debug 'on config', @options
-    @connectSonos()
+  onConfig: (device={}) =>
+    options = device.options || {}
+    lastIpAddress = @ipAddress
+    { useCustomIP, ipAddress } = options
+    return @getAvailableSonos() unless useCustomIP
+    return debug 'already connected' if @sonos? && lastIpAddress && lastIpAddress == ipAddress
+    @ipAddress = null
+    @connectCustomSonos ipAddress
 
   start: (device) =>
-    { @uuid } = device
-    debug 'started', @uuid
     @onConfig device
-
 
 module.exports = SonosConnector
