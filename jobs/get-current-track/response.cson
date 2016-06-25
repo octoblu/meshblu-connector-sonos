@@ -1,0 +1,29 @@
+title: 'Get Current Track'
+type: 'object'
+properties:
+  data:
+    type: 'object'
+    properties:
+      title:
+        type: 'string'
+      artist:
+        type: 'string'
+      album:
+        type: 'string'
+      albumArtURI:
+        type: 'string'
+      position:
+        type: 'number'
+      duration:
+        type: 'number'
+      albumArtURL:
+        type: 'string'
+    required: [
+      'title'
+      'artist'
+      'album'
+      'albumArtURI'
+      'position'
+      'duration'
+      'albumArtURL'
+    ]

@@ -1,0 +1,6 @@
+angular: [
+  { key: 'data.searchType' }
+  { key: 'data.searchTerm' }
+  { key: 'data.limit' }
+  { key: 'data.offset' }
+]

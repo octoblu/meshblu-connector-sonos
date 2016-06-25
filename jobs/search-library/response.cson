@@ -1,0 +1,40 @@
+title: 'Get Volume'
+type: 'object'
+properties:
+  data:
+    type: 'object'
+    properties:
+      returned:
+        type: 'number'
+      total:
+        type: 'number'
+      items:
+        type: 'array'
+        items:
+          type: 'object'
+          properties:
+            title:
+              type: 'string'
+            artist:
+              type: 'string'
+            album:
+              type: 'string'
+            albumArtURL:
+              type: 'string'
+            uri:
+              type: 'string'
+        required: [
+          'title'
+          'artist'
+          'album'
+          'albumArtURL'
+          'uri'
+        ]
+    required: [
+      'returned'
+      'total'
+      'items'
+    ]
+required: [
+  'data'
+]

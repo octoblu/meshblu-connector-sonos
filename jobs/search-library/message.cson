@@ -1,0 +1,41 @@
+title: 'Search Library'
+type: 'object'
+properties:
+  data:
+    type: 'object'
+    properties:
+      searchType:
+        title: 'Search Type'
+        type: 'string'
+        enum: [
+          'artists'
+          'albumArtists'
+          'albums'
+          'genres'
+          'composers'
+          'tracks'
+          'playlists'
+          'share'
+        ]
+      searchTerm:
+        title: 'Search Term'
+        type: 'string'
+      limit:
+        title: 'Limit # of results'
+        type: 'integer'
+        default: 100
+        minimum: 1
+      offset:
+        title: 'Start searching at # of results'
+        type: 'integer'
+        default: 0
+        minimum: 0
+    required: [
+      'searchType'
+      'searchTerm'
+      'limit'
+      'offset'
+    ]
+required: [
+  'data'
+]

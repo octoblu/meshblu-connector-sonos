@@ -1,0 +1,15 @@
+title: 'Play Song Next'
+type: 'object'
+properties:
+  data:
+    type: 'object'
+    properties:
+      uri:
+        title: 'Song URI'
+        type: 'string'
+    required: [
+      'uri'
+    ]
+required: [
+  'data'
+]

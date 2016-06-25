@@ -1,0 +1,13 @@
+title: "Advanced Configuration"
+type: "object"
+properties:
+  options:
+    title: "Options"
+    type: "object"
+    properties:
+      ipAddress:
+        title: "IP Address"
+        type: "string"
+    required: [
+      "ipAddress"
+    ]

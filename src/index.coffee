@@ -1,62 +1,65 @@
-_               = require 'lodash'
 {EventEmitter}  = require 'events'
-Sonos           = require 'sonos'
-cSonos          = require('sonos').Sonos
 debug           = require('debug')('meshblu-connector-sonos:index')
+SonosManager    = require './sonos-manager'
 
-class SonosConnector extends EventEmitter
+class Connector extends EventEmitter
+  constructor: ->
+    @sonos = new SonosManager
+
+  addToQueue: ({uri, positionInQueue}, callback) =>
+    @sonos.addToQueue {uri, positionInQueue}, callback
+
+  close: (callback) =>
+    debug 'on close'
+    @sonos.close callback
+
+  getCurrentTrack: (callback) =>
+    @sonos.getCurrentTrack callback
+
+  getMuted: (callback) =>
+    @sonos.getMuted callback
+
+  getVolume: (callback) =>
+    @sonos.getVolume callback
+
   isOnline: (callback) =>
-    callback null, running: !!@sonos
+    callback null, running: true
 
-  onMessage: (message={}) =>
-    @doAction message.payload
+  mute: (callback) =>
+    @sonos.mute callback
 
-  doAction: (payload={}) =>
-    return @emitMessage 'error', error: 'Not connected to a Sonos' unless @sonos?
-    { action, args } = payload
-    return @emitMessage 'error', error: "Invalid Action, #{action}" unless @sonos[action]?
-    callback = (error, response) =>
-      return @emitMessage 'error', { error } if error?
-      @emitMessage action, { response }
+  next: (callback) =>
+    @sonos.next callback
 
-    argValues = _.values(args)
-    argValues.push callback
-    @sonos[action] argValues...
+  onConfig: (device={}, callback=->) =>
+    { @options } = device
+    debug 'on config', @options
+    {ipAddress} = @options ? {}
+    @sonos.connect {ipAddress}, callback
 
-  emitMessage: (topic, payload={}) =>
-    @emit 'message', {
-      devices: ['*'],
-      topic,
-      payload
-    }
+  play: (callback) =>
+    @sonos.play callback
 
-  connectToSonos: (@ipAddress=@ipAddress) =>
-    @sonos = new cSonos @ipAddress
+  playImmediately: ({uri}, callback) =>
+    @sonos.playImmediately {uri}, callback
 
-  getAvailableSonos: =>
-    return @connectToSonos() if @ipAddress
-    @getDeviceIp (error, ipAddress) =>
-      return @emitMessage 'error', { error } if error?
-      @connectToSonos ipAddress
+  playNext: ({uri}, callback) =>
+    @sonos.playNext {uri}, callback
 
-  getDeviceIp: (callback) =>
-    debug 'discovering...'
-    search = Sonos.search()
-    search.on 'DeviceAvailable', (device, model) =>
-      debug 'device discovered', device, model
-      search.destroy()
-      callback null, device.host
+  pause: (callback) =>
+    @sonos.pause callback
 
-  onConfig: (device={}) =>
-    options = device.options || {}
-    lastIpAddress = @ipAddress
-    { useCustomIP, ipAddress } = options
-    return @getAvailableSonos() unless useCustomIP
-    return debug 'already connected' if @sonos? && lastIpAddress && lastIpAddress == ipAddress
-    @ipAddress = null
-    @connectCustomSonos ipAddress
+  previous: (callback) =>
+    @sonos.previous callback
 
-  start: (device) =>
-    @onConfig device
+  setVolume: ({volume}, callback) =>
+    @sonos.setVolume {volume}, callback
 
-module.exports = SonosConnector
+  start: (device, callback) =>
+    debug 'started'
+    @onConfig device, callback
+
+  unmute: (callback) =>
+    @sonos.unmute callback
+
+module.exports = Connector

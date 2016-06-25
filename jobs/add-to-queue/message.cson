@@ -1,0 +1,22 @@
+title: 'Add To Queue'
+type: 'object'
+properties:
+  data:
+    type: 'object'
+    properties:
+      uri:
+        title: 'Song URI'
+        type: 'string'
+      positionInQueue:
+        title: 'Position In Queue'
+        description: '0 places song at end of queue, indexed from 1'
+        type: 'integer'
+        minimum: 0
+        default: 0
+    required: [
+      'uri'
+      'positionInQueue'
+    ]
+required: [
+  'data'
+]
