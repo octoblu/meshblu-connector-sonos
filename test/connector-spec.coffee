@@ -141,3 +141,21 @@ describe 'Connector', ->
 
     it 'should call sonos.next', ->
       expect(@sonos.next).to.have.been.called
+
+  describe '->searchLibrary', ->
+    beforeEach (done) ->
+      options =
+        searchType: 'searchy'
+        searchTerm: 'termy'
+        limit: 100
+        offset: 0
+      @sonos.searchLibrary = sinon.stub().yields null
+      @sut.searchLibrary options, done
+
+    it 'should call sonos.searchLibrary', ->
+      options =
+        searchType: 'searchy'
+        searchTerm: 'termy'
+        limit: 100
+        offset: 0
+      expect(@sonos.searchLibrary).to.have.been.calledWith options

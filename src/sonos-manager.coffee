@@ -69,6 +69,14 @@ class SonosManager extends EventEmitter
     return callback new Error 'Sonos not connected' unless @sonos?
     @sonos.pause callback
 
+  searchLibrary: ({ searchType, searchTerm, limit, offset }, callback) =>
+    return callback new Error 'Sonos not connected' unless @sonos?
+    options =
+      start: offset
+      total: limit
+    @sonos.searchMusicLibrary searchType, searchTerm, options, (error, data) =>
+      callback null, data
+
   setVolume: ({volume}, callback) =>
     return callback new Error 'Sonos not connected' unless @sonos?
     @sonos.setVolume volume, callback

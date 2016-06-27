@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-sonos",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Meshblu Connector ",
   "homepage": "https://github.com/octoblu/sonos",
   "bugs": "https://github.com/octoblu/sonos/issues",

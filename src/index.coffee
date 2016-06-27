@@ -55,6 +55,9 @@ class Connector extends EventEmitter
   setVolume: ({volume}, callback) =>
     @sonos.setVolume {volume}, callback
 
+  searchLibrary: ({ searchType, searchTerm, limit, offset }, callback) =>
+    @sonos.searchLibrary { searchType, searchTerm, limit, offset }, callback
+
   start: (device, callback) =>
     debug 'started'
     @onConfig device, callback

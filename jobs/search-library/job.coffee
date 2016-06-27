@@ -11,7 +11,7 @@ class GetVolume
     return callback @_userError(422, 'data.offset is required') unless data?.offset?
 
     { searchType, searchTerm, limit, offset } = data
-    @connector.setVolume { searchType, searchTerm, limit, offset }, (error, {returned, total, items}) =>
+    @connector.searchLibrary { searchType, searchTerm, limit, offset }, (error, {returned, total, items}) =>
       metadata =
         code: 200
         status: http.STATUS_CODES[200]

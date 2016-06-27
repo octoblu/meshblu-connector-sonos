@@ -34,16 +34,20 @@ describe 'SonosManager', ->
 
   describe '->searchLibrary', ->
     beforeEach (done) ->
-      @sonos.searchMusicLibrary = sinon.stub().yields null, 
-      @sut.searchLibrary (error, {@searchLibrary}) =>
+      options =
+        searchType: 'artists'
+        searchTerm: 'Spears'
+        limit: 100
+        offset: 0
+      @sonos.searchMusicLibrary = sinon.stub().yields null, []
+      @sut.searchLibrary options, (error, @results) =>
         done error
 
     it 'should call sonos.searchMusicLibrary', ->
-      expect(@sonos.searchMusicLibrary).to.have.been.calledWith 'artists', 'Spears', {start: 0, total: 0}, [{}]
+      expect(@sonos.searchMusicLibrary).to.have.been.calledWith 'artists', 'Spears', {start: 0, total: 100}
 
     it 'should yield searchLibrary', ->
-      expect(@searchLibrary).to.equal 'Oops I did it again'
-
+      expect(@results).to.deep.equal []
 
   describe '->getVolume', ->
     beforeEach (done) ->
